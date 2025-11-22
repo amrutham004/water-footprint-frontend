@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website With Login & Registration | Codehal</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Ionicons (module + nomodule pattern) -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+  <header>
+    <h1 class="logo">
+  <a href="#">
+    <img src="logo.png" alt="Website Logo" class="logo-img">
+  </a>
+</h1>
+
+    <nav class="navigation" aria-label="Main navigation">
+      <a href="#">Home</a>
+      <a href="about.html">About</a>
+      <a href="#">Calculation</a>
+      <a href="#contact">Contact</a>
+      <!-- This button opens the popup/modal; keep type=button so it doesn't submit forms -->
+      <button class="btnLogin-popup" type="button" aria-haspopup="dialog" aria-controls="auth-dialog">Login</button>
+    </nav>
+  </header>
+
+  <!-- Welcome Section -->
+<section class="welcome-section" id="welcome-section">
+  <div class="welcome-text">
+    <h1>Welcome to Water Footprint Calculator</h1>
+    <p>Track and reduce your daily water usage easily.</p>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <h2>Contact Us</h2>
+    <p>Feel free to reach out to any of our team members for more information or assistance.</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3>C M Shalini</h3>
+        <p><strong>Phone:</strong> <a href="tel:+919731469369">+91 97314 69369</a></p>
+        <p><strong>Email:</strong> <a href="mailto:xxyyzz@gmail.com">xxyyzz@gmail.com</a></p>
+      </div>
+
+      <div class="contact-card">
+        <h3>Amrutha M</h3>
+        <p><strong>Phone:</strong> <a href="tel:+918867476194">+91 88674 76194</a></p>
+        <p><strong>Email:</strong> <a href="mailto:xxyyzz@gmail.com">xxyyzz@gmail.com</a></p>
+      </div>
+
+      <div class="contact-card">
+        <h3>Vashini R</h3>
+        <p><strong>Phone:</strong> <a href="tel:+916363184103">+91 63631 84103</a></p>
+        <p><strong>Email:</strong> <a href="mailto:xxyyzz@gmail.com">xxyyzz@gmail.com</a></p>
+      </div>
+
+      <div class="contact-card">
+        <h3>Vismaya L</h3>
+        <p><strong>Phone:</strong> <a href="tel:+919538584514">+91 95385 84514</a></p>
+        <p><strong>Email:</strong> <a href="mailto:xxyyzz@gmail.com">xxyyzz@gmail.com</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Popup / dialog wrapper -->
+  <div class="wrapper" id="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+
+  <!-- Fullscreen overlay (hidden by default) -->
+<div class="modal-overlay" hidden></div>
+
+<!-- Popup/modal wrapper -->
+<div class="wrapper" id="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+  ...
+</div>
+
+
+    <!-- Close button should be interactive and keyboard-focusable -->
+    <button class="icon-close" type="button" aria-label="Close authentication dialog">
+      <ion-icon name="close"></ion-icon>
+    </button>
+
+    <!-- LOGIN FORM -->
+    <div class="form-box login" id="login-form-wrapper">
+      <h2 id="dialog-title">Login</h2>
+      <!-- Use a meaningful action for production. method=post as typical for login forms. -->
+      <form id="login-form" action="/login" method="post" novalidate>
+
+        <div class="input-box">
+          <span class="icon" aria-hidden="true"><ion-icon name="mail"></ion-icon></span>
+          <input id="login-email" name="email" type="email" required aria-required="true" autocomplete="email" />
+          <label for="login-email">Email</label>
+        </div>
+
+        <div class="input-box">
+          <span class="icon" aria-hidden="true"><ion-icon name="lock-closed"></ion-icon></span>
+          <input id="login-password" name="password" type="password" required aria-required="true" autocomplete="current-password" />
+          <label for="login-password">Password</label>
+        </div>
+
+        <div class="remember-forgot">
+          <label for="remember-me"><input id="remember-me" name="remember" type="checkbox" /> Remember me</label>
+          <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+
+        <div class="login-register">
+          <p>Don't have an account? 
+            <!-- Use a button for actions that toggle UI (better than # links) -->
+            <button type="button" class="register-link" aria-controls="register-form-wrapper">Register</button>
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <!-- REGISTRATION FORM -->
+    <div class="form-box register" id="register-form-wrapper" hidden>
+      <h2>Registration</h2>
+      <form id="register-form" action="/register" method="post" novalidate>
+
+        <div class="input-box">
+          <span class="icon" aria-hidden="true"><ion-icon name="person-outline"></ion-icon></span>
+          <input id="register-username" name="username" type="text" required aria-required="true" autocomplete="username" />
+          <label for="register-username">Username</label>
+        </div>
+
+        <div class="input-box">
+          <span class="icon" aria-hidden="true"><ion-icon name="mail"></ion-icon></span>
+          <input id="register-email" name="email" type="email" required aria-required="true" autocomplete="email" />
+          <label for="register-email">Email</label>
+        </div>
+
+        <div class="input-box">
+          <span class="icon" aria-hidden="true"><ion-icon name="lock-closed"></ion-icon></span>
+          <input id="register-password" name="password" type="password" required aria-required="true" autocomplete="new-password" />
+          <label for="register-password">Password</label>
+        </div>
+
+        <div class="remember-forgot">
+          <label for="agree-terms"><input id="agree-terms" name="agree_terms" type="checkbox" required aria-required="true" /> I agree to the <a href="/terms" target="_blank" rel="noopener">terms &amp; conditions</a></label>
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+
+        <div class="login-register">
+          <p>Already have an account? 
+            <button type="button" class="login-link" aria-controls="login-form-wrapper">Login</button>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<footer>
+  <p>&copy; 2025 Water Footprint Calculator. All rights reserved.</p>
+</footer>
+
+  <!-- Link to your external JS (keeps behavior out of the HTML). Make sure script toggles hidden attributes and traps focus if this dialog is used as modal) -->
+  <script src="script.js"></script>
+</body>
+</html>

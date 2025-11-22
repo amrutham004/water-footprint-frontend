@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Water Usage Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --accent:#162938;
+      --white:#ffffff;
+      --glass: rgba(255,255,255,.75);
+      --ink:#0b3a4a;
+      --ocean:#2995c9;
+      --ocean-2:#51e2f5;
+      --shadow: 0 18px 42px rgba(0,0,0,.25);
+    }
+    html, body { height:100%; }
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,Segoe UI,Arial,sans-serif;
+      color:var(--ink);
+      background: url('waterfootprint.jpeg') center/cover no-repeat fixed;
+      display:flex;
+      flex-direction:column;
+      min-height:100dvh;
+      padding-top:82px;
+    }
+    header{
+      position:fixed;
+      top:0; left:0; right:0;
+      height:82px;
+      padding:16px 60px;
+      display:flex; align-items:center; justify-content:space-between;
+      z-index:1500;
+      background: linear-gradient(180deg, rgba(0,0,0,.24), rgba(0,0,0,0));
+      backdrop-filter: blur(6px);
+    }
+    .logo{ display:flex; align-items:center; gap:10px; color:#fff; font-weight:700; }
+    .logo img{ width:46px; height:46px; object-fit:contain; }
+    .navigation{ display:flex; align-items:center; gap:32px; }
+    .navigation a{
+      color:#fff; text-decoration:none; font-weight:700; letter-spacing:.2px;
+      position:relative;
+    }
+    .navigation a::after{
+      content:''; position:absolute; left:0; bottom:-8px; height:3px; width:0;
+      background:#fff; border-radius:3px; transition:width .3s ease;
+    }
+    .navigation a:hover::after,
+    .navigation a.active::after{ width:100%; }
+    .btnLogin-popup{
+      border:2px solid #fff; border-radius:10px; padding:8px 22px; color:#fff;
+      text-decoration:none; font-weight:800; display:inline-block; transition:.25s;
+      margin-left:6px;
+    }
+    .btnLogin-popup:hover{ background:#fff; color:var(--accent); }
+    .hero{
+      text-align:center; color:#fff; text-shadow:0 8px 30px rgba(0,0,0,.55);
+      margin:28px 12px 16px;
+    }
+    .hero h1{ font-size:2.4rem; margin:0 0 6px; }
+    .hero p{ margin:0; opacity:.95; }
+    main{ flex:1; display:flex; align-items:flex-start; justify-content:center; padding:18px 14px 60px; }
+    .card{
+      width:min(1120px,92vw);
+      background:var(--glass);
+      backdrop-filter: blur(16px);
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:34px 28px 42px;
+      animation:fadeIn .7s ease both;
+    }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+    .step{ display:none; }
+    .step.active{ display:block; }
+    .step .icon-wrap{
+      display:flex; align-items:center; justify-content:center; margin-bottom:12px;
+    }
+    .step .icon{
+      width:70px; height:70px; border-radius:18px; background:rgba(255,255,255,.55);
+      display:grid; place-items:center; box-shadow:0 10px 24px rgba(0,0,0,.15);
+      overflow:hidden;
+    }
+    .step .icon img{ width:100%; height:100%; object-fit:cover; border-radius:18px; }
+    .q-title{
+      text-align:center; font-weight:800; color:#0f4c5c; margin:6px 0 12px; font-size:1.1rem;
+    }
+    .row-center{ display:flex; align-items:center; justify-content:center; gap:14px; }
+    .pill-btn{
+      background:var(--ocean); color:#fff; border:none; width:40px; height:40px;
+      border-radius:12px; font-size:1.15rem; cursor:pointer; box-shadow:0 8px 18px rgba(41,149,201,.35);
+      transition:transform .06s ease;
+    }
+    .pill-btn:active{ transform:translateY(1px); }
+    .count{ min-width:26px; text-align:center; font-weight:700; }
+    .ml-input input{
+      width:130px; padding:10px 12px; border-radius:12px; border:1px solid rgba(0,0,0,.08);
+      font-size:1rem; text-align:right; outline:none;
+      box-shadow: inset 0 1px 0 rgba(0,0,0,.04);
+    }
+    .ml-input .unit{ font-weight:700; color:#0f4c5c; }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:8px; }
+    .chip{
+      display:inline-flex; align-items:center; gap:6px; padding:10px 14px; border-radius:16px;
+      background:#ebf3f6; cursor:pointer; user-select:none; border:1px solid rgba(0,0,0,.06);
+      transition:background .2s ease, color .2s ease, border-color .2s ease;
+      font-weight:600;
+    }
+    .chip input{ accent-color:var(--ocean); }
+    .chip.selected{ background:var(--ocean); color:#fff; border-color:transparent; }
+    .wizard-nav{
+      display:flex; justify-content:space-between; align-items:center; margin:22px 0 14px;
+    }
+    .nav-btn{
+      background:var(--ocean); color:#fff; border:none; border-radius:12px; padding:10px 26px;
+      font-weight:800; cursor:pointer; box-shadow:0 8px 18px rgba(41,149,201,.35);
+    }
+    .nav-btn[hidden]{ display:none; }
+    .cta{
+      display:flex; justify-content:center; margin-top:10px;
+    }
+    .cta .form{
+      background:#ffbe31; color:#222; border:none; border-radius:14px; padding:11px 36px; font-weight:900;
+      box-shadow:0 10px 20px rgba(255,190,49,.35); cursor:pointer;
+    }
+    .progress{
+      margin-top:8px; position:relative; height:32px; border-radius:20px; background:#d8f1f8;
+      overflow:hidden;
+    }
+    .bar{
+      height:100%; width:0%; border-radius:20px; background:linear-gradient(90deg,var(--ocean),var(--ocean-2));
+      transition:width .35s ease;
+    }
+    .progress span{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      color:#0f4c5c; font-weight:800;
+    }
+    footer{
+      color:#fff; text-align:center; padding:16px 10px; background:rgba(0,0,0,.85);
+    }
+    @media (max-width:640px){
+      header{ padding:12px 18px; }
+      .navigation{ gap:18px; }
+      .hero h1{ font-size:1.9rem; }
+      .card{ padding:22px 16px 28px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+    </div>
+    <nav class="navigation" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="calculation.html" class="active">Calculation</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="btnLogin-popup" href="index.html?auth=login" role="button" aria-haspopup="dialog">Login</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <h1>Water Usage Calculator</h1>
+    <p>Estimate your footprint with a quick, friendly wizard.</p>
+  </section>
+
+  <!-- Main / Card -->
+  <main>
+    <div class="card" role="region" aria-labelledby="calcTitle">
+      <h2 id="calcTitle" style="position:absolute; left:-9999px;">Water Usage Calculator Steps</h2>
+      <form id="calcForm" autocomplete="off" onsubmit="return false;">
+        <!-- Step 1 -->
+        <div class="step active" id="step0">
+          <div class="icon-wrap">
+            <div class="icon"><img src="family.png" alt="Family icon"></div>
+          </div>
+          <p class="q-title">1. Family size (including yourself):</p>
+          <div class="row-center">
+            <button type="button" class="pill-btn" aria-label="decrease" onclick="adjust('family',-1)">−</button>
+            <span id="familyValue" class="count">1</span>
+            <button type="button" class="pill-btn" aria-label="increase" onclick="adjust('family',1)">+</button>
+          </div>
+          <div class="wizard-nav">
+            <span></span>
+            <button type="button" class="nav-btn" onclick="navStep(1)" id="nextBtn0">Next</button>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="step" id="step1">
+          <div class="icon-wrap">
+            <div class="icon"><img src="water_usage.png" alt="Water usage icon"></div>
+          </div>
+          <p class="q-title">2. Enter total water used in milliliters (mL):</p>
+          <div class="row-center ml-input">
+            <input type="number" id="mlValue" inputmode="numeric" min="0" step="100" placeholder="0">
+            <span class="unit">ml</span>
+          </div>
+          <div class="wizard-nav">
+            <button type="button" class="nav-btn" onclick="navStep(-1)">Back</button>
+            <button type="button" class="nav-btn" onclick="navStep(1)">Next</button>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="step" id="step2">
+          <div class="icon-wrap">
+            <div class="icon"><img src="clock.png" alt="Time icon"></div>
+          </div>
+          <p class="q-title">3. Enter total usage time:</p>
+          <div class="row-center" style="flex-wrap:wrap; gap:18px;">
+            <div class="row-center">
+              <strong>Hours</strong>
+              <button type="button" class="pill-btn" onclick="adjust('hours',-1)">−</button>
+              <span id="hoursValue" class="count">0</span>
+              <button type="button" class="pill-btn" onclick="adjust('hours',1)">+</button>
+            </div>
+            <div class="row-center" style="margin-left:10px;">
+              <strong>Days</strong>
+              <button type="button" class="pill-btn" onclick="adjust('days',-1)">−</button>
+              <span id="daysValue" class="count">0</span>
+              <button type="button" class="pill-btn" onclick="adjust('days',1)">+</button>
+            </div>
+          </div>
+          <div class="wizard-nav">
+            <button type="button" class="nav-btn" onclick="navStep(-1)">Back</button>
+            <button type="button" class="nav-btn" onclick="navStep(1)">Next</button>
+          </div>
+        </div>
+        <!-- Step 4 -->
+        <div class="step" id="step3">
+          <div class="icon-wrap">
+            <div class="icon"><img src="appliances.png" alt="Appliances icon"></div>
+          </div>
+          <p class="q-title">4. Number of appliances in use:</p>
+          <div class="row-center">
+            <button type="button" class="pill-btn" onclick="adjust('appliance',-1)">−</button>
+            <span id="applianceValue" class="count">1</span>
+            <button type="button" class="pill-btn" onclick="adjust('appliance',1)">+</button>
+          </div>
+          <div class="wizard-nav">
+            <button type="button" class="nav-btn" onclick="navStep(-1)">Back</button>
+            <button type="button" class="nav-btn" onclick="navStep(1)">Next</button>
+          </div>
+        </div>
+        <!-- Step 5 -->
+        <div class="step" id="step4">
+          <div class="icon-wrap">
+            <div class="icon"><img src="active_appliances.png" alt="Active appliances icon"></div>
+          </div>
+          <p class="q-title">5. Which appliances are currently in use?</p>
+          <div class="chips">
+            <label class="chip" id="showerLbl"><input type="checkbox" id="shower">Shower</label>
+            <label class="chip" id="dishwasherLbl"><input type="checkbox" id="dishwasher">Dishwasher</label>
+            <label class="chip" id="washingLbl"><input type="checkbox" id="washing">Washing Machine</label>
+            <label class="chip" id="sinkLbl"><input type="checkbox" id="sink">Sink</label>
+            <label class="chip" id="toiletLbl"><input type="checkbox" id="toilet">Toilet</label>
+          </div>
+          <div class="cta">
+            <button type="submit" class="form" onclick="showResult()">Calculate</button>
+          </div>
+          <div class="wizard-nav">
+            <button type="button" class="nav-btn" onclick="navStep(-1)">Back</button>
+            <span></span>
+          </div>
+        </div>
+        <!-- Progress -->
+        <div class="progress" aria-live="polite" aria-label="Water level">
+          <div class="bar" id="waterBar"></div>
+          <span id="waterLevel">Water Level: 0%</span>
+        </div>
+      </form>
+      <!-- Result Section -->
+      <div id="resultSection" style="display:none; margin-top:30px; background:#e8f7ff; border-radius:18px; padding:26px 18px; box-shadow:0 4px 20px rgba(0,0,0,.10); text-align:center;">
+        <h3>Your Water Footprint</h3>
+        <div style="font-size:1.2em; margin-bottom:12px;">
+          <strong>Personal:</strong> <span id="personalUsage"></span> liters/day<br>
+          <strong>India Household Average:</strong> <span id="indiaAvgUsage"></span> liters/day
+        </div>
+        <div id="usageComment" style="margin-bottom:18px; font-weight:600;"></div>
+        <div style="margin:0 auto 20px; max-width:360px;">
+          <progress id="usageBar" value="0" max="100" style="width:100%; height:18px;"></progress>
+          <div id="usageBarLabel" style="font-weight:700; font-size:.98em; margin-top:4px;">0%</div>
+        </div>
+        <div style="margin-top:14px;">
+          <h4>Water Saving Precautions</h4>
+          <ul style="text-align:left; max-width:420px; margin:0 auto;">
+            <li>Turn off taps when not in use.</li>
+            <li>Fix leaks promptly in your house.</li>
+            <li>Take shorter showers or use buckets for bathing.</li>
+            <li>Run washing machines and dishwashers only with full loads.</li>
+            <li>Reuse water for gardening or cleaning when possible.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Water Footprint Calculator. All rights reserved.
+  </footer>
+
+<script>
+  // --------- Wizard state ----------
+  let state = { family: 1, hours: 0, days: 0, appliance: 1 };
+  let step = 0;
+  const stepsTotal = 5;
+  const stepIds = ['step0','step1','step2','step3','step4'];
+
+  function setActiveStep(newIndex){
+    if(newIndex < 0) newIndex = 0;
+    if(newIndex >= stepsTotal) newIndex = stepsTotal - 1;
+    const current = document.querySelector('.step.active');
+    if(current) current.classList.remove('active');
+    document.getElementById(stepIds[newIndex]).classList.add('active');
+    step = newIndex;
+  }
+
+  function navStep(dir){ setActiveStep(step + dir); }
+
+  function adjust(type, delta){
+    if(type === 'family'){
+      state.family = Math.max(1, state.family + delta);
+      document.getElementById('familyValue').textContent = state.family;
+    }
+    if(type === 'hours'){
+      state.hours = Math.max(0, state.hours + delta);
+      document.getElementById('hoursValue').textContent = state.hours;
+    }
+    if(type === 'days'){
+      state.days = Math.max(0, state.days + delta);
+      document.getElementById('daysValue').textContent = state.days;
+    }
+    if(type === 'appliance'){
+      state.appliance = Math.max(1, state.appliance + delta);
+      document.getElementById('applianceValue').textContent = state.appliance;
+    }
+  }
+
+  // Toggle "chip" styling when you click on appliance labels
+  ['showerLbl','dishwasherLbl','washingLbl','sinkLbl','toiletLbl'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){
+      el.addEventListener('click', (e)=>{
+        if(e.target.tagName.toLowerCase() !== 'input'){
+          const input = el.querySelector('input[type="checkbox"]');
+          input.checked = !input.checked;
+        }
+        el.classList.toggle('selected', el.querySelector('input').checked);
+      });
+    }
+  });
+
+  // Helper: choose a primary appliance from the checkboxes for the backend
+  function getPrimaryAppliance() {
+    const options = [
+      { id: 'shower', label: 'Shower' },
+      { id: 'dishwasher', label: 'Dishwasher' },
+      { id: 'washing', label: 'Washing Machine' },
+      { id: 'sink', label: 'Sink' },
+      { id: 'toilet', label: 'Toilet' }
+    ];
+    for (const opt of options) {
+      const el = document.getElementById(opt.id);
+      if (el && el.checked) {
+        return opt.label;
+      }
+    }
+    // Default if nothing is selected
+    return 'Sink';
+  }
+
+  // ---------- Local calculation + backend integration ----------
+  async function showResult() {
+    const mlInput = document.getElementById('mlValue');
+    const resultSection = document.getElementById('resultSection');
+    const personalUsageEl = document.getElementById('personalUsage');
+    const indiaAvgUsageEl = document.getElementById('indiaAvgUsage');
+    const comment = document.getElementById('usageComment');
+    const usageBar = document.getElementById('usageBar');
+    const usageBarLabel = document.getElementById('usageBarLabel');
+
+    const familySize = state.family;
+    const ml = parseInt(mlInput.value, 10) || 0;
+    const days = state.days || 1;          // avoid divide-by-zero
+    const appliances = state.appliance;
+    const usageHours = state.hours + state.days * 24; // convert days to hours
+
+    // --- 1) Your original front-end calculation ---
+    const personalLitersPerDay = Math.round((ml / 1000) / days);
+    const indiaAvg = 135 * familySize;
+
+    personalUsageEl.textContent = personalLitersPerDay;
+    indiaAvgUsageEl.textContent = indiaAvg;
+
+    if (personalLitersPerDay > indiaAvg) {
+      comment.textContent = "Your water usage is ABOVE the Indian household average. Please try to adopt water-saving habits!";
+      comment.style.color = "#d42b2b";
+    } else {
+      comment.textContent = "Great! Your water usage is WITHIN the Indian average. Keep saving water!";
+      comment.style.color = "#188318";
+    }
+
+    const usagePct = Math.min(100, Math.round((personalLitersPerDay / indiaAvg) * 100));
+    usageBar.value = isFinite(usagePct) ? usagePct : 0;
+    usageBarLabel.textContent = (isFinite(usagePct) ? usagePct : 0) + "% of recommended maximum";
+
+    resultSection.style.display = 'block';
+    resultSection.scrollIntoView({ behavior: "smooth" });
+
+    // --- 2) Call your FastAPI backend /predict ---
+    const primaryAppliance = getPrimaryAppliance();
+    const payload = {
+      family_size: familySize,
+      usage_hours: usageHours,
+      appliances: appliances,
+      primary_appliance: primaryAppliance,
+      // You can later add a checkbox for this; for now we assume no device
+      water_saving_device: false
+    };
+
+    try {
+      const resp = await fetch('https://water-backend.onrender.com/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!resp.ok) {
+        console.error('Backend error:', resp.status, await resp.text());
+        return; // silently keep UI functional even if backend fails
+      }
+
+      const data = await resp.json();
+      const predicted = Number(data.predicted_water_usage_liters ?? NaN);
+      const savings = Number(data.predicted_savings_liters ?? NaN);
+
+      let backendDiv = document.getElementById('backendResult');
+      if (!backendDiv) {
+        backendDiv = document.createElement('div');
+        backendDiv.id = 'backendResult';
+        backendDiv.style.marginTop = '14px';
+        backendDiv.style.fontWeight = '600';
+        backendDiv.style.fontSize = '0.98em';
+        resultSection.appendChild(backendDiv);
+      }
+
+      const parts = [];
+      if (!Number.isNaN(predicted)) {
+        parts.push(`Model prediction: ${predicted.toFixed(1)} L/day`);
+      }
+      if (!Number.isNaN(savings)) {
+        parts.push(`Potential savings: ${savings.toFixed(1)} L/day with water-saving devices`);
+      }
+
+      if (parts.length) {
+        backendDiv.textContent = parts.join(' • ');
+      } else {
+        backendDiv.textContent = "Model prediction unavailable.";
+      }
+    } catch (err) {
+      console.error('Error calling /predict:', err);
+      // We don't break the page; just skip model output
+    }
+  }
+</script>
+</body>
+</html>

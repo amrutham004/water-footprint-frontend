@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Water Footprint Calculator</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #162938;
+      --accent-contrast: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('waterfootprint.jpeg') no-repeat center/cover fixed;
+      color: var(--accent);
+      min-height: 100vh;
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Header (matches homepage) */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0)); /* subtle backdrop for readability */
+  backdrop-filter: blur(6px);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+    height: 90px;
+    width: auto;
+    vertical-align: middle;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+
+/* Navigation links */
+.navigation a {
+  position: relative;
+  font-size: 1.05rem;
+  color: var(--accent-contrast);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 28px;
+}
+
+/* Animated underline */
+.navigation a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 3px;
+  background: var(--accent-contrast);
+  border-radius: 5px;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform .4s;
+}
+
+.navigation a:hover::after,
+.navigation a:focus::after {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+/* Login popup button in nav */
+.navigation .btnLogin-popup {
+  width: 130px;
+  height: 44px;
+  background: transparent;
+  border: 2px solid var(--accent-contrast);
+  outline: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  color: var(--accent-contrast);
+  font-weight: 600;
+  margin-left: 26px;
+  transition: background .25s, color .25s, transform .08s;
+}
+
+.navigation .btnLogin-popup:hover,
+.navigation .btnLogin-popup:focus {
+  background: var(--accent-contrast);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+    .btnLogin-popup {
+      border: 2px solid #fff;
+      background: transparent;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-left: 24px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btnLogin-popup:hover {
+      background: #fff;
+      color: var(--accent);
+    }
+    /* About Section */
+    .about-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px 100px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .about-title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 10px;
+      text-shadow: 0 2px 6px rgba(255, 255, 255, 0.6);
+    }
+
+    .about-subtitle {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #333;
+      margin-bottom: 40px;
+    }
+
+    /* Content boxes */
+    .content-box {
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 18px;
+      max-width: 950px;
+      width: 90%;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      text-align: left;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease-out;
+    }
+
+    .content-box.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content-box h2 {
+      font-size: 1.4rem;
+      color: #004a63;
+      margin-bottom: 10px;
+    }
+
+    .content-box p, .content-box li {
+      color: #333;
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    footer {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 15px 0;
+      font-size: 0.95rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .about-title {
+        font-size: 2rem;
+      }
+      .content-box {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+    <img src="logo.png" alt="Logo">
+    </div>
+
+
+    <nav class="navigation">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="#">Calculation</a>
+      <a href="#">Contact</a>
+      <a class="btnLogin-popup" href="index.html?auth=login" role="button" aria-haspopup="dialog">Login</a>
+    </nav>
+  </header>
+
+  <!-- About Section -->
+  <div class="about-container">
+    <h1 class="about-title">About Water Footprint Calculator</h1>
+    <p class="about-subtitle">Understand your water use – blue, green, and grey – and learn how to reduce it.</p>
+
+    <div class="content-box">
+      <h2>1. What is a Water Footprint and What Does It Calculate?</h2>
+      <p>A Water Footprint measures the total freshwater used — both directly and indirectly — to produce goods, provide services, and carry out daily activities.</p>
+      <ul>
+        <li><b>Blue Water:</b> Water taken from rivers, lakes, or underground sources used for drinking, washing, or industrial purposes.</li>
+        <li><b>Green Water:</b> Rainwater absorbed into soil and used by plants — important in agriculture and natural ecosystems.</li>
+        <li><b>Grey Water:</b> The volume required to dilute pollutants so water remains safe for use.</li>
+      </ul>
+    </div>
+
+    <div class="content-box">
+      <h2>2. How is it Helpful and How Does it Measure Water Footprint?</h2>
+      <p>The calculator collects information about your usage (appliances, hot water use, washing habits) and uses established data to estimate total water consumption.</p>
+      <ul>
+        <li>Integrates appliance usage patterns (washing machines, showers, dishwashers).</li>
+        <li>Compares your usage to the average person’s footprint.</li>
+        <li>Provides advice on water-efficient practices.</li>
+        <li>Reveals hidden or indirect water that goes into producing goods and food.</li>
+      </ul>
+    </div>
+
+    <div class="content-box">
+      <h2>3. Precautions to Save Water</h2>
+      <ul>
+        <li>Fix leaks in taps and pipes immediately.</li>
+        <li>Use washing machines and dishwashers only when full.</li>
+        <li>Install smart meters or sensors to monitor water in real time.</li>
+        <li>Harvest rainwater for gardening or cleaning.</li>
+        <li>Turn off taps when brushing teeth or shaving.</li>
+        <li>Reuse safe water for cleaning or gardening.</li>
+        <li>Spread awareness about water conservation in your community.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Water Footprint Calculator. All rights reserved.
+  </footer>
+
+  <!-- Scroll Animation Script -->
+  <script>
+    const boxes = document.querySelectorAll('.content-box');
+
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      boxes.forEach(box => {
+        const boxTop = box.getBoundingClientRect().top;
+        if (boxTop < triggerBottom) {
+          box.classList.add('visible');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+  </script>
+</body>
+</html>
+
