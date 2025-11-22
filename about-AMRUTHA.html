@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Water Footprint Calculator</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #162938;
+      --accent-contrast: #ffffff;
+      --glass: rgba(255, 255, 255, 0.78);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('waterfootprint.jpeg') no-repeat center/cover fixed;
+      color: var(--accent);
+      min-height: 100vh;
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Header (matches homepage) */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999;
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0));
+      backdrop-filter: blur(6px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo img {
+      height: 90px;
+      width: auto;
+      vertical-align: middle;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    }
+
+    /* Navigation links */
+    .navigation a {
+      position: relative;
+      font-size: 1.05rem;
+      color: var(--accent-contrast);
+      text-decoration: none;
+      font-weight: 500;
+      margin-left: 28px;
+    }
+
+    /* Animated underline */
+    .navigation a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 3px;
+      background: var(--accent-contrast);
+      border-radius: 5px;
+      transform-origin: right;
+      transform: scaleX(0);
+      transition: transform .4s;
+    }
+
+    .navigation a:hover::after,
+    .navigation a:focus::after {
+      transform-origin: left;
+      transform: scaleX(1);
+    }
+
+    /* Login popup button in nav */
+    .navigation .btnLogin-popup {
+      width: 130px;
+      height: 44px;
+      background: transparent;
+      border: 2px solid var(--accent-contrast);
+      outline: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      color: var(--accent-contrast);
+      font-weight: 600;
+      margin-left: 26px;
+      transition: background .25s, color .25s, transform .08s;
+    }
+
+    .navigation .btnLogin-popup:hover,
+    .navigation .btnLogin-popup:focus {
+      background: var(--accent-contrast);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Login popup button (global, restores previous exact look) */
+    .btnLogin-popup {
+      border: 2px solid #fff;
+      background: transparent;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-left: 24px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btnLogin-popup:hover {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    /* About Section */
+    .about-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px 100px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .about-title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 10px;
+      text-shadow: 0 2px 6px rgba(255, 255, 255, 0.6);
+    }
+
+    .about-subtitle {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    /* Decorative wave separator */
+    .wave {
+      width: 100%;
+      height: 60px;
+      margin-bottom: 24px;
+      opacity: .9;
+    }
+
+    /* Content boxes */
+    .content-box {
+      background: var(--glass);
+      border-radius: 18px;
+      max-width: 1100px;
+      width: 92%;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      text-align: left;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease-out;
+    }
+
+    .content-box.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content-box h2 {
+      font-size: 1.4rem;
+      color: #004a63;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .content-box p, .content-box li {
+      color: #333;
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    ul { margin-left: 20px; margin-top: 8px; }
+    li { margin-bottom: 6px; }
+
+    /* Visuals grid (NEW) */
+    .visuals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 18px 0 6px;
+    }
+    .visual-card {
+      background: rgba(255,255,255,.9);
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.14);
+      padding: 18px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .visual-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+    .visual-card svg { width: 64px; height: 64px; }
+    .visual-card h3 { font-size: 1.05rem; margin-top: 10px; color: #0b536d; }
+    .visual-card p { font-size: .92rem; color: #2b2b2b; }
+
+    /* Inline list icons (NEW) */
+    .li-with-icon { display: grid; grid-template-columns: 28px 1fr; align-items: start; gap: 10px; }
+    .li-icon { margin-top: 3px; }
+    .li-icon svg { width: 22px; height: 22px; }
+
+    /* Precautions list check style */
+    .check-list li { list-style: none; }
+    .check-list li + li { margin-top: 6px; }
+    .check-list .li-icon { margin-top: 2px; }
+
+    footer {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 15px 0;
+      font-size: 0.95rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .visuals-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .about-title { font-size: 2rem; }
+      .content-box { padding: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+
+    <nav class="navigation">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="calculation.html">Calculation</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="btnLogin-popup" href="index.html?auth=login" role="button" aria-haspopup="dialog">Login</a>
+    </nav>
+  </header>
+
+  <!-- About Section -->
+  <div class="about-container">
+    <h1 class="about-title">About Water Footprint Calculator</h1>
+    <p class="about-subtitle">Understand your water use – blue, green, and grey – and learn how to reduce it.</p>
+
+    <!-- Decorative wave (SVG) -->
+    <svg style="color:#616161"</path>
+    </svg>
+
+    <!-- Visuals: Blue / Green / Grey cards -->
+    <section class="content-box visible" aria-labelledby="types-title">
+      <h2 id="types-title">1. What is a Water Footprint and What Does It Calculate?</h2>
+      <p>A Water Footprint measures the total freshwater used — both directly and indirectly — to produce goods, provide services, and carry out daily activities.</p>
+
+      <div class="visuals-grid" role="group" aria-label="Blue, Green and Grey water visuals">
+        <!-- Blue water -->
+        <figure class="visual-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="color:#1e88e5">
+            <path d="M12 2C12 2 5 9 5 13.5C5 17.09 7.91 20 11.5 20C15.09 20 18 17.09 18 13.5C18 9 12 2 12 2Z" fill="currentColor"/>
+          </svg>
+          <figcaption>
+            <h3>Blue Water</h3>
+            <p>Surface & groundwater used for drinking, washing, and industry.</p>
+          </figcaption>
+        </figure>
+        <!-- Green water -->
+        <figure class="visual-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="color:#2e7d32">
+            <path d="M12 2C8 7 6 10 6 13a6 6 0 0 0 12 0c0-3-2-6-6-11Z" fill="currentColor"></path>
+            <path d="M7 14c3-1 6-1 10 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <figcaption>
+            <h3>Green Water</h3>
+            <p>Rainwater stored in soil and used by plants.</p>
+          </figcaption>
+        </figure>
+        <!-- Grey water -->
+        <figure class="visual-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="color:#616161">
+            <path d="M4 4h16v4H4zM6 8v8a6 6 0 0 0 12 0V8" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+            <circle cx="12" cy="16" r="3" fill="currentColor"></circle>
+          </svg>
+          <figcaption>
+            <h3>Grey Water</h3>
+            <p>Water volume needed to dilute pollutants to safe levels.</p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <ul>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2S6 9 6 13.5A6.5 6.5 0 0 0 12.5 20 6.5 6.5 0 0 0 19 13.5C19 9 12 2 12 2z"></path></svg>
+          </span>
+          <span><b>Blue Water:</b> Water taken from rivers, lakes, or underground sources used for drinking, washing, or industrial purposes.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8 7 6 10 6 13a6 6 0 0 0 12 0c0-3-2-6-6-11Z"></path></svg>
+          </span>
+          <span><b>Green Water:</b> Rainwater absorbed into soil and used by plants — important in agriculture and natural ecosystems.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v4H4zM6 8v8a6 6 0 0 0 12 0V8" fill="none" stroke="currentColor" stroke-width="1.5"></path><circle cx="12" cy="16" r="3"></circle></svg>
+          </span>
+          <span><b>Grey Water:</b> The volume required to dilute pollutants so water remains safe for use.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- How it helps -->
+    <section class="content-box" aria-labelledby="how-title">
+      <h2 id="how-title">
+        <!-- magnifying glass icon -->
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        2. How is it Helpful and How Does it Measure Water Footprint?
+      </h2>
+      <p>The calculator collects information about your usage (appliances, hot water use, washing habits) and uses established data to estimate total water consumption.</p>
+
+      <!-- Visual steps strip -->
+      <div class="visuals-grid" role="group" aria-label="How the calculator works">
+        <figure class="visual-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+          <figcaption>
+            <h3>Input Usage</h3>
+            <p>Showers, laundry, dishes, diet & purchases.</p>
+          </figcaption>
+        </figure>
+        <figure class="visual-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1.5"/></svg>
+          <figcaption>
+            <h3>Compute</h3>
+            <p>Applies factors for direct & indirect water.</p>
+          </figcaption>
+        </figure>
+        <figure class="visual-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18a8 8 0 1 1 16 0" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <figcaption>
+            <h3>Compare</h3>
+            <p>Benchmarks vs. average footprint.</p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <ul>
+        <li>Integrates appliance usage patterns (washing machines, showers, dishwashers).</li>
+        <li>Compares your usage to the average person’s footprint.</li>
+        <li>Provides advice on water-efficient practices.</li>
+        <li>Reveals hidden or indirect water that goes into producing goods and food.</li>
+      </ul>
+    </section>
+
+    <!-- Precautions -->
+    <section class="content-box" aria-labelledby="precautions-title">
+      <h2 id="precautions-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 18H3L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="16" r="1"/><path d="M12 8v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        3. Precautions to Save Water
+      </h2>
+      <ul class="check-list">
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Fix leaks in taps and pipes immediately.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Use washing machines and dishwashers only when full.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Install smart meters or sensors to monitor water in real time.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Harvest rainwater for gardening or cleaning.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Turn off taps when brushing teeth or shaving.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Reuse safe water for cleaning or gardening.</span>
+        </li>
+        <li class="li-with-icon">
+          <span class="li-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6l-11 11-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Spread awareness about water conservation in your community.</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Water Footprint Calculator. All rights reserved.
+  </footer>
+
+  <!-- Scroll Animation Script -->
+  <script>
+    const boxes = document.querySelectorAll('.content-box');
+
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      boxes.forEach(box => {
+        const boxTop = box.getBoundingClientRect().top;
+        if (boxTop < triggerBottom) {
+          box.classList.add('visible');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+  </script>
+</body>
+</html>
+
